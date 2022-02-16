@@ -29,7 +29,7 @@ def webcam_frames_m(cap):
         list_points=[]
         if results.multi_face_landmarks:
           for face_landmarks in results.multi_face_landmarks:
-              for i in range(0,468):
+              for i in range(0,477):
 
                 pt=face_landmarks.landmark[i]
                 list_points.append((int(pt.x*WIDTH),int(pt.y*HEIGHT)))

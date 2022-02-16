@@ -124,12 +124,13 @@ class Game:
         self.left_eye_ratios=[]
         self.left_eye_data=[]
         self.left_eye_clip=False
-        self.left_eye_cur=0
+        self.left_eye_vectors=[]
         self.right_eye_ratios=[]
         self.right_eye_data=[]
         self.right_eye_clip=False
         self.right_eye_cur=0
         self.blinking=True
+        self.time=0
 
         # mouth_width_height
 
@@ -375,6 +376,7 @@ class Game:
 
         if self.list_face_points:
 
+
             eyes_dist=distance(self.list_face_points[386][0],self.list_face_points[386][1],self.list_face_points[160][0],self.list_face_points[160][1])
 
             if self.original_eye_dist==0:
@@ -430,49 +432,54 @@ class Game:
             dist_ver2=distance(self.list_face_points[380][0],self.list_face_points[380][1],self.list_face_points[385][0],self.list_face_points[385][1])
             dist_hor=distance(self.list_face_points[263][0],self.list_face_points[263][1],self.list_face_points[463][0],self.list_face_points[463][1])
             ear_right=(dist_ver1+dist_ver2)/(2*dist_hor)
+            rect_right=pg.Rect(0,0,distance(self.list_face_points[474][0],self.list_face_points[474][1],self.list_face_points[476][0],self.list_face_points[476][1]),distance(self.list_face_points[380][0],self.list_face_points[380][1],self.list_face_points[385][0],self.list_face_points[385][1]))
 
-            self.right_eye_data.append(ear_right)
-            if len(self.right_eye_data)>5:
-                self.right_eye_data.pop(0)
             self.right_eye_ratios.append(ear_right)
             if len(self.right_eye_ratios)>2:
                 self.right_eye_ratios.pop(0)
+            self.right_eye_data.append(ear_right)
+            if len(self.right_eye_data)>5:
+                self.right_eye_data.pop(0)
 
-            if abs(abs(self.rot_y)-abs(sum(self.rot_y_backup)/3))<0.02 and round(sum(self.right_eye_data)/5,3)*0.86>round(sum(self.right_eye_ratios)/2,3) :
+
+
+
+
+            if abs(abs(self.rot_y)-abs(sum(self.rot_y_backup)/3))<0.02 and sum(self.right_eye_data)/5*0.86>sum(self.right_eye_ratios)/2 and not self.right_eye_clip:
                 self.right_eye_clip=True
-
-            if round(sum(self.right_eye_data)/5,5)<round(sum(self.right_eye_ratios)/2,5)*0.876:
+            if sum(self.right_eye_data)/5<=sum(self.right_eye_ratios)/2*0.876 or (rect_right.height)>rect_right.width*0.487:
                 self.right_eye_clip=False
-            # if round(sum(self.right_eye_ratios)/2,3)<0.145 :
-            #     self.right_eye_clip=True
-            # else:
-            #     self.right_eye_clip=False
+
+
 
 
             dist_verl1=distance(self.list_face_points[160][0],self.list_face_points[160][1],self.list_face_points[144][0],self.list_face_points[144][1])
             dist_verl2=distance(self.list_face_points[159][0],self.list_face_points[159][1],self.list_face_points[145][0],self.list_face_points[145][1])
             dist_horl=distance(self.list_face_points[33][0],self.list_face_points[33][1],self.list_face_points[243][0],self.list_face_points[243][1])
             ear_left=(dist_verl1+dist_verl2)/(2*dist_horl)
+            rect_left=pg.Rect(0,0,distance(self.list_face_points[471][0],self.list_face_points[471][1],self.list_face_points[469][0],self.list_face_points[469][1]),distance(self.list_face_points[159][0],self.list_face_points[159][1],self.list_face_points[145][0],self.list_face_points[145][1]))
 
-
-
-
-
-
-            self.left_eye_data.append(ear_left)
-            if len(self.left_eye_data)>5:
-                self.left_eye_data.pop(0)
             self.left_eye_ratios.append(ear_left)
             if len(self.left_eye_ratios)>2:
                 self.left_eye_ratios.pop(0)
+            self.left_eye_data.append(ear_left)
+            if len(self.left_eye_data)>5:
+                self.left_eye_data.pop(0)
 
 
-            if abs(abs(self.rot_y)-abs(sum(self.rot_y_backup)/3))<0.02 and round(sum(self.left_eye_data)/5,3)*0.87>round(sum(self.left_eye_ratios)/2,3) :
+
+
+            if   abs(abs(self.rot_y)-abs(sum(self.rot_y_backup)/3))<0.02 and sum(self.left_eye_data)/5*0.87>sum(self.left_eye_ratios)/2 :
+
                 self.left_eye_clip=True
-            if round(sum(self.left_eye_data)/5,5)<round(sum(self.left_eye_ratios)/2,5)*0.879:
+
+
+            if sum(self.left_eye_data)/5<=sum(self.left_eye_ratios)/2*0.879 or (rect_left.height)>rect_left.width*0.487:
                 self.left_eye_clip=False
 
-
+            # elif abs(abs(self.rot_y)-abs(sum(self.rot_y_backup)/3))>0.045:
+            #     self.left_eye_ratios.clear()
+            #     self.left_eye_clip=False
 
 
             # mouth
